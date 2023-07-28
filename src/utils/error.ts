@@ -1,0 +1,18 @@
+export const unknownServerError = "an unknown server error occurred";
+export const serviceError = "service error";
+export const unknownDatabaseError = "an unknown database error occurred";
+export const databaseError = "a database error occurred";
+export const databaseConnectionError = "unable to connect to database server";
+export const incorrectCredentials = "username or password is incorrect";
+export const jwtError = "a JWT error occurred";
+export const noPermissionError = "you do not have permission";
+export const unauthorizedError = "unauthorized";
+export const unknownEventError = "webhook event not recognized";
+export const resourceNotFoundError = "resource not found";
+export const moduleError = "a module error occurred";
+export const middlewareErrorLabel = "middleware error";
+export const validationError = "a validation error occurred";
+export const SERVER_UNKNOWN = "an unknown server error occurred";
+export const UNAUTHORIZED = "unauthorized";
+export const existError = (param: string) => `${param} already exist`;
+export const notExistError = (param: string) => `${param} does not exist`;
