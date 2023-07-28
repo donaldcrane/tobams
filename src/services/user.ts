@@ -2,12 +2,12 @@ import {
   Service,
   response,
   notExistError,
-  UserData,
   incorrectCredentials,
   generateToken,
   LoginData,
   CreateUserData,
   existError,
+  databaseError,
 } from "../utils";
 import { service } from "../core";
 import bcrypt from "bcrypt";
@@ -24,10 +24,12 @@ export const signUpUser: Service<CreateUserData> = ({
     if (usernameExist) return response.conflict(existError("username"));
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.User.create({
+    const user = await db.User.create({
       username,
       password: hashedPassword
     });
+    
+    if (!user) return response.failed(databaseError);
     return response.created(
       "Account created successfully, kindly log into account"
     );
@@ -36,14 +38,13 @@ export const signUpUser: Service<CreateUserData> = ({
 export const signInUser: Service<LoginData> = ({ validatedData }) =>
   service(async () => {
     const { username, password } = validatedData;
-    const foundUser = await db.User.findOne({username});
+    const user = await db.User.findOne({username});
     
-    if (!foundUser) return response.notFound(notExistError("username"));
+    if (!user) return response.notFound(notExistError("username"));
 
-    const match = await bcrypt.compare(password, foundUser.password ?? "");
+    const match = await bcrypt.compare(password, user.password ?? "");
     if (!match) return response.badRequest(incorrectCredentials);
 
-    const user = foundUser as UserData;
     const token = await generateToken({
       id: user._id,
       username: user.username,
@@ -54,10 +55,7 @@ export const signInUser: Service<LoginData> = ({ validatedData }) =>
       username: user.username
     }
    
-    return response.success(
-      { userDetails, token },
-      "User logged in successfully"
-    );
+    return response.success({ userDetails, token },  "User logged in successfully" );
   });
 
 

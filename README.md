@@ -1,6 +1,6 @@
 
 # Tobams
-Tobams is a RESTful API service Fintech management app
+Tobams is a RESTful API service user management system.
 
 ## Documentation
 
